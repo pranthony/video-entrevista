@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { Container, Heading, HStack, Stack } from '@chakra-ui/react'
+import QuestionCard from './components/questionCard'
+import { QuestionType } from './config/types'
+import { BASE_URL } from './config'
+import VideoQuestion from './components/videoQuestion'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [ questions, setQuestions ] = useState<QuestionType[]>([])
+  useEffect(()=>{
+    fetch(`${BASE_URL}questions`)
+      .then( response =>{
+        const data = response.json()
+        return data
+      }).then( data => {
+        setQuestions(data)
+      })
+  }, [])
+  
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <Stack as={'section'}  minH={'100vh'}>
+      <Heading as={'h1'}>Video Cuestionario</Heading>
+      
+      <HStack minH={'90vh'} flexWrap='wrap' gap={4}>
+        { 
+          questions && questions?.map((question)=>{
+            return <QuestionCard {...question} key={`card-${question.id}`}/>
+          })
+        }
+        <VideoQuestion />
+      </HStack>
+    </Stack>
   )
 }
 

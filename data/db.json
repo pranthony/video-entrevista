@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "title": "¿Question 1?",
+      "description": "lorem ipsum dolor"
+    },
+    {
+      "id": 2,
+      "title": "¿Question 2?",
+      "description": "lorem ipsum dolor"
+    },
+    {
+      "id": 3,
+      "title": "¿Question 3?",
+      "description": "lorem ipsum dolor"
+    }
+  ]
+}
