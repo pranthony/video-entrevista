@@ -1,7 +1,7 @@
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { Box, Button, Heading, Modal, ModalContent, ModalFooter, ModalHeader, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { BASE_URL } from '../../config'
+import { VITE_API_URL } from '../../config'
 import { QuestionType } from '../../config/types'
 import Video from '../video'
 import { handleSuccess } from '../video/config'
@@ -32,7 +32,7 @@ const VideoQuestion = () => {
       return
     }
 
-    fetch(`${BASE_URL}questions/${id}`)
+    fetch(`${VITE_API_URL}questions/${id}`)
       .then( response =>{
         const data = response.json()
         return data

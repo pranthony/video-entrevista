@@ -3,13 +3,13 @@ import './App.css'
 import { Container, Heading, HStack, Stack } from '@chakra-ui/react'
 import QuestionCard from './components/questionCard'
 import { QuestionType } from './config/types'
-import { BASE_URL } from './config'
+import { VITE_API_URL } from './config'
 import VideoQuestion from './components/videoQuestion'
 
 function App() {
   const [ questions, setQuestions ] = useState<QuestionType[]>([])
   useEffect(()=>{
-    fetch(`${BASE_URL}questions`)
+    fetch(`${VITE_API_URL}questions`)
       .then( response =>{
         const data = response.json()
         return data

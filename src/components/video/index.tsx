@@ -54,7 +54,7 @@ const Video = ({ stream }: VideoProps) => {
       text: 'Pause'
     })
   }
-  let timer: number
+  let timer: NodeJS.Timer
   useEffect(() => {
     if (!record.isRecording || recording.isPause)
       return
