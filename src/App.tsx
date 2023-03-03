@@ -29,7 +29,9 @@ function App() {
             return <QuestionCard {...question} key={`card-${question.id}`}/>
           })
         }
-        <VideoQuestion />
+        {
+          questions && <VideoQuestion />
+        }
       </HStack>
     </Stack>
   )

@@ -6,11 +6,6 @@ import { QuestionType } from '../../config/types'
 import Video from '../video'
 import { handleSuccess } from '../video/config'
 
-interface VideoQuestionProps{
-  question_id: number,
-  openModal: ()=>{}
-}
-
 const VideoQuestion = () => {
   const [stream, setStream] = useState<MediaStream>(new MediaStream())
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -19,19 +14,20 @@ const VideoQuestion = () => {
   const [ id, setID ] = useState<number>(0)
 
   const recordBtns = document.querySelectorAll('button[data-action=recordBtn]')
-  
+  console.log(recordBtns)
+
   recordBtns.forEach(recordBtn => recordBtn.addEventListener('click', () =>{
+    console.log('in')
     setID(Number(recordBtn.id))
     _handlerStream()
-
   }))
-
+    
   useEffect(()=>{
     if(!id){
       onClose()
       return
     }
-
+    
     fetch(`${VITE_API_URL}questions/${id}`)
       .then( response =>{
         const data = response.json()

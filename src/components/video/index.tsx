@@ -1,7 +1,7 @@
 import { DownloadIcon } from '@chakra-ui/icons'
 import { Button, Container, ModalBody, Text, VStack, Icon, Stack, Box, HStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { downloadVideo, startRecording, stopRecording } from './config'
+import { downloadVideo, playVideo, startRecording, stopRecording } from './config'
 
 interface VideoProps {
   stream: MediaStream
@@ -31,12 +31,12 @@ const Video = ({ stream }: VideoProps) => {
       })
       return
     }
-    if (recorder)
-      stopRecording(recorder)
+    recorder && stopRecording(recorder)
     setRecord({
       isRecording: false,
       text: 'start'
     })
+    setCount(120)
   }
 
   const _handlerRecording = () => {
@@ -64,6 +64,7 @@ const Video = ({ stream }: VideoProps) => {
 
     return () => clearInterval(timer)
   }, [record, recording])
+  
   useEffect(() => {
     if (count || !recorder)
       return

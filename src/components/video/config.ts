@@ -5,27 +5,23 @@ export function handleSuccess(stream: MediaStream) {
   const gumVideo: HTMLVideoElement | null = document.querySelector('video#gum');
   if (!gumVideo)
     return false
+  
   gumVideo.srcObject = stream
   return true
 }
 
 function handleDataAvailable(event: any) {
-  console.log('handleDataAvailable', event);
   if (event.data && event.data.size > 0) {
+    playVideo(event.data)
     recordedBlobs.push(event.data);
   }
 }
 export function startRecording(mediaRecorder: MediaRecorder) {
-  mediaRecorder.onstop = (event) => {
-    console.log('Recorder stopped: ', event);
-  };
-  mediaRecorder.ondataavailable = handleDataAvailable;
-  mediaRecorder.start(120000);
-  console.log('MediaRecorder started', mediaRecorder);
+  mediaRecorder.start();
 }
 export function stopRecording(mediaRecorder: MediaRecorder) {
   mediaRecorder.stop();
-  console.log(recordedBlobs)
+  mediaRecorder.ondataavailable = handleDataAvailable;
 }
 
 export function downloadVideo() {
@@ -41,4 +37,15 @@ export function downloadVideo() {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }, 100);
+}
+
+export function playVideo(superBuffer : Blob){
+  const gumVideo: HTMLVideoElement | null = document.querySelector('video#gum');
+  if(!gumVideo)
+    return
+    
+  gumVideo.srcObject = null;
+  gumVideo.src = window.URL.createObjectURL(superBuffer);
+  gumVideo.controls = true;
+  gumVideo.play();
 }
