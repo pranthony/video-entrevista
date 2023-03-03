@@ -12,15 +12,16 @@ const VideoQuestion = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [ question, setQuestion ] = useState<QuestionType>()
   const [ id, setID ] = useState<number>(0)
-
+  
   const recordBtns = document.querySelectorAll('button[data-action=recordBtn]')
   console.log(recordBtns)
-
+  
   recordBtns.forEach(recordBtn => recordBtn.addEventListener('click', () =>{
     console.log('in')
     setID(Number(recordBtn.id))
     _handlerStream()
   }))
+
     
   useEffect(()=>{
     if(!id){

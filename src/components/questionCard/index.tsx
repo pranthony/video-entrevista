@@ -1,15 +1,11 @@
-import {  Box, Button, Card, CardBody, CardFooter, Container, Heading, Image, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import {  Button, Card, CardBody, CardFooter, Heading, Image, Text } from '@chakra-ui/react'
 import { QuestionType } from '../../config/types'
 import play from '../../assets/play.svg'
-import Video from '../video'
-import { useRef, useState } from 'react'
-import { handleSuccess } from '../video/config'
-import { ArrowBackIcon } from '@chakra-ui/icons'
+import { useRef } from 'react'
 
 const QuestionCard = ({ description, title, id }: QuestionType) => {
   const btn = useRef<HTMLButtonElement>(null)
-   
-
+  
   return (
     <Card  h='md' w='300px'>
       <CardBody bgColor='black' display={'flex'} alignItems={'flex-end'}>
