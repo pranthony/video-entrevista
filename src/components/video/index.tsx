@@ -1,11 +1,12 @@
 import { DownloadIcon } from '@chakra-ui/icons'
-import { Button, Container, ModalBody, Text, VStack, Icon, Stack, Box, HStack } from '@chakra-ui/react'
+import { Button, ModalBody, Text, Icon, Stack, HStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { downloadVideo, playVideo, startRecording, stopRecording } from './config'
+import { downloadVideo, startRecording, stopRecording } from './config'
 
 interface VideoProps {
   stream: MediaStream
 }
+let timer: NodeJS.Timer
 
 const Video = ({ stream }: VideoProps) => {
   const [recorder, setRecorder] = useState<MediaRecorder>()
@@ -54,7 +55,6 @@ const Video = ({ stream }: VideoProps) => {
       text: 'Pause'
     })
   }
-  let timer: NodeJS.Timer
   useEffect(() => {
     if (!record.isRecording || recording.isPause)
       return
@@ -64,7 +64,7 @@ const Video = ({ stream }: VideoProps) => {
 
     return () => clearInterval(timer)
   }, [record, recording])
-  
+
   useEffect(() => {
     if (count || !recorder)
       return
@@ -81,7 +81,8 @@ const Video = ({ stream }: VideoProps) => {
   return (
     <ModalBody margin='auto'>
       <Stack>
-        <video id="gum" playsInline autoPlay muted ></video>
+        <video id="gum" playsInline autoPlay muted></video>
+      
         <HStack justifyContent={'space-between'}>
           <HStack>
             <Icon viewBox='0 0 200 200' color='red.500'>

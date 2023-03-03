@@ -3,9 +3,9 @@ const recordedBlobs: any[] = [];
 
 export function handleSuccess(stream: MediaStream) {
   const gumVideo: HTMLVideoElement | null = document.querySelector('video#gum');
+
   if (!gumVideo)
     return false
-  
   gumVideo.srcObject = stream
   return true
 }
