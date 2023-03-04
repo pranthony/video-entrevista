@@ -1,15 +1,19 @@
 import { DownloadIcon } from '@chakra-ui/icons'
-import { Button, ModalBody, Text, Icon, Stack, HStack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
-import { downloadVideo, startRecording, stopRecording } from './config'
+import { Button, Text, Icon, Stack, HStack } from '@chakra-ui/react'
+import { useEffect, useRef, useState } from 'react'
+import { useMediaRecorder } from '../../hook/useMediaRecorder'
+import { useMediaStream } from '../../hook/useMediaStream'
+import useVideoBlob from '../../hook/useVideoBlob'
 
-interface VideoProps {
-  stream: MediaStream
-}
+
 let timer: NodeJS.Timer
 
-const Video = ({ stream }: VideoProps) => {
-  const [recorder, setRecorder] = useState<MediaRecorder>()
+const Video = () => {
+  const { mediaStream, setVideoStream } = useMediaStream()
+  const { starRecording, stopRecording, pauseRecording, resumeRecording, recordedBlob } = useMediaRecorder(mediaStream)
+  const { downloadVideo, playVideo } = useVideoBlob(recordedBlob)
+  const video = useRef<HTMLVideoElement>(null)
+
   const [record, setRecord] = useState({
     isRecording: false,
     text: 'Start'
@@ -21,18 +25,16 @@ const Video = ({ stream }: VideoProps) => {
   const [count, setCount] = useState(120)
   const _handlerRecord = () => {
     if (!record.isRecording) {
-      let mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'video/webm;codecs=h264,opus'
-      });
-      setRecorder(mediaRecorder)
-      startRecording(mediaRecorder)
+
+
+      starRecording()
       setRecord({
         isRecording: true,
         text: 'stop'
       })
       return
     }
-    recorder && stopRecording(recorder)
+    stopRecording()
     setRecord({
       isRecording: false,
       text: 'start'
@@ -42,19 +44,20 @@ const Video = ({ stream }: VideoProps) => {
 
   const _handlerRecording = () => {
     if (!recording.isPause) {
-      recorder?.pause()
+      pauseRecording()
       setRecording({
         isPause: true,
         text: 'Resume'
       })
       return
     }
-    recorder?.resume()
+    resumeRecording()
     setRecording({
       isPause: false,
       text: 'Pause'
     })
   }
+
   useEffect(() => {
     if (!record.isRecording || recording.isPause)
       return
@@ -66,42 +69,45 @@ const Video = ({ stream }: VideoProps) => {
   }, [record, recording])
 
   useEffect(() => {
-    if (count || !recorder)
+    if (count)
       return
-    stopRecording(recorder)
+    stopRecording()
     setRecord({
       isRecording: false,
       text: 'start'
     })
-    
+
     return () => clearInterval(timer)
   }, [count])
 
+  useEffect(() => {
+    if (!recordedBlob)
+      return
+
+    playVideo(video)
+  }, [recordedBlob])
 
   return (
-    <ModalBody margin='auto'>
-      <Stack>
-        <video id="gum" playsInline autoPlay muted></video>
-      
-        <HStack justifyContent={'space-between'}>
-          <HStack>
-            <Icon viewBox='0 0 200 200' color='red.500'>
-              <path
-                fill='currentColor'
-                d='M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0'
-              />
-            </Icon>
-            <Text>{count}</Text>
-          </HStack>
-          <HStack>
-            <Button onClick={_handlerRecord}>{record.text}</Button>
-            <Button onClick={_handlerRecording}>{recording.text}</Button>
-          </HStack>
-          <Button onClick={downloadVideo} leftIcon={<DownloadIcon />} />
+    <Stack margin='auto'>
+      <video ref={video} playsInline autoPlay muted ></video>
+      <HStack justifyContent={'space-between'}>
+        <HStack>
+          <Icon viewBox='0 0 200 200' color='red.500'>
+            <path
+              fill='currentColor'
+              d='M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0'
+            />
+          </Icon>
+          <Text>{count}</Text>
         </HStack>
-      </Stack>
-
-    </ModalBody>
+        <HStack>
+          <Button onClick={_handlerRecord}>{record.text}</Button>
+          <Button onClick={_handlerRecording}>{recording.text}</Button>
+        </HStack>
+        <Button onClick={() => setVideoStream(video)}>Open Camera</Button>
+        <Button onClick={() => downloadVideo(`${new Date()}`)} leftIcon={<DownloadIcon />} />
+      </HStack>
+    </Stack>
   )
 }
 

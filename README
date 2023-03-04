@@ -8,10 +8,10 @@ Detalles:
   - El punto rojo en el detalle de grabacion debe de palpitar.
   - Debe permitir la opcion de grabar, stop, regrabar como se indica en la pantalla de detalle de video.
 
-
-Historia de progrmador:
-  . Mejorar la seleccion de botones con querySelectos 
-  
   
 Demo 
   https://video-entrevista.vercel.app/
+
+To solve:
+ - Logica de botones
+ - media stream in production 
