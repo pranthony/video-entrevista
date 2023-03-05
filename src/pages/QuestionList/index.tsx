@@ -5,10 +5,10 @@ import { QuestionType } from '../../config/types'
 import { useFetch } from '../../hook/useFetch'
 
 const QuestionList = () => {
-  const { data } = useFetch<QuestionType[]>(`${VITE_API_URL}questions`)
+  const { fetchData } = useFetch<QuestionType[]>(`${VITE_API_URL}questions`)
 
   return (
-    <Stack as={'section'} minH={'100vh'} >
+    <Stack as={'section'} minH={'100vh'} display={'grid'} placeContent={'center'}>
       <Heading as={'h1'}>Video Cuestionario</Heading>
       <HStack
         minH={'90vh'}
@@ -17,7 +17,7 @@ const QuestionList = () => {
         justifyContent='center'
       >
         {
-          data && data?.map((question) => <QuestionCard
+          fetchData && fetchData?.map((question) => <QuestionCard
             {...question}
             key={`card-${question.id}`}
           />)

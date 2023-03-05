@@ -30,6 +30,7 @@ export function useMediaStream() {
   function setVideoStream(video: RefObject<HTMLVideoElement>) {
     if (!mediaStream || !video.current)
       return
+    video.current.removeAttribute('src')
     video.current.srcObject = mediaStream
   }
 

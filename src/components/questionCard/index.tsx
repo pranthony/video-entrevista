@@ -1,16 +1,26 @@
 import { Button, Card, CardBody, CardFooter, Heading, Image, Text } from '@chakra-ui/react'
 import { QuestionType } from '../../config/types'
 import play from '../../assets/play.svg'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const QuestionCard = ({ description, title, id }: QuestionType) => {
   const btn = useRef<HTMLButtonElement>(null)
+  const [img, setImg] = useState<string | null>()
+
+  useEffect(() => {
+    const videoImg = localStorage.getItem(String(id))
+    setImg(videoImg)
+  }, [])
 
   return (
-    <Card h='md' w='300px'>
-      <CardBody bgColor='black' display={'flex'} alignItems={'flex-end'}>
+    <Card minH='sm' w='400px'>
+      <CardBody bgColor='black' display={'flex'} justifyContent={'flex-end'} flexDirection={'column'} gap={2}>
+        {
+          img && <video src={img}></video>
+        }
         <Link to={`/video/${id}`}>
+
           <Button
             id={`${id}`}
             data-action='recordBtn'
