@@ -9,7 +9,7 @@ Detalles:
   - Debe permitir la opcion de grabar, stop, regrabar como se indica en la pantalla de detalle de video.✅
 
 Run:
-``` bash
+```bash
   yarn
   yarn server
   yarn dev
