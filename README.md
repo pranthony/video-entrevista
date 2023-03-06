@@ -11,12 +11,12 @@ Detalles:
 Run:
 ```bash
 yarn
-yarn server
+
 yarn dev
 ```
 
 ```bash
-json-server --watch db.json
+yarn server
 ```
   
 Demo 
