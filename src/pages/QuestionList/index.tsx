@@ -8,10 +8,15 @@ const QuestionList = () => {
   const { fetchData } = useFetch<QuestionType[]>(`${VITE_API_URL}questions`)
 
   return (
-    <Stack as={'section'} minH={'100vh'} display={'grid'} placeContent={'center'}>
-      <Heading as={'h1'}>Video Cuestionario</Heading>
+    <Stack
+      as={'section'}
+      display={'grid'}
+      placeContent={'center'}
+      minH={'100vh'} gap={4} p={4} m={4}
+    >
+      <Heading as={'h1'} textAlign={'center'} >Video Cuestionario</Heading>
       <HStack
-        minH={'90vh'}
+        minH={'80vh'}
         flexWrap='wrap'
         gap={4}
         justifyContent='center'

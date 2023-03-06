@@ -1,8 +1,11 @@
-import { DownloadIcon } from '@chakra-ui/icons'
-import { Button, Text, Stack, HStack, Box, Center } from '@chakra-ui/react'
+import { DownloadIcon, RepeatIcon, StarIcon } from '@chakra-ui/icons'
+import { Button, Text, Stack, HStack, Box, Center, IconButton } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import CircleIcon from '../../atoms/CircleIcon'
-import { useFetch } from '../../hook/useFetch'
+import PauseIcon from '../../atoms/PauseIcon'
+import RecordIcon from '../../atoms/RecordIcon'
+import ResumeIcon from '../../atoms/ResumeIcon'
+import StopIcon from '../../atoms/StopIcon'
 import { useMediaRecorder } from '../../hook/useMediaRecorder'
 import { useMediaStream } from '../../hook/useMediaStream'
 import useSecondsToMinutesSeconds from '../../hook/useSecondsToMinuteSeconds'
@@ -22,15 +25,17 @@ const Video = ({ videoId }: VideoProps) => {
   const { downloadVideo } = useVideoBlob()
   const video = useRef<HTMLVideoElement>(null)
 
-  const [ srcVideo, setSrcVideo ] = useState<string | null>()
+  const [srcVideo, setSrcVideo] = useState<string | null>()
 
   const [record, setRecord] = useState({
     isRecording: false,
-    text: 'Start'
+    text: 'record',
+    icon: <RecordIcon />
   })
   const [recording, setRecording] = useState({
     isPause: false,
-    text: 'Pause'
+    text: 'Pause',
+    icon: <PauseIcon />
   })
   const [count, setCount] = useState(120)
   const { timeString } = useSecondsToMinutesSeconds(count)
@@ -40,7 +45,8 @@ const Video = ({ videoId }: VideoProps) => {
       starRecording()
       setRecord({
         isRecording: true,
-        text: 'stop'
+        text: 'stop',
+        icon: <StopIcon />
       })
       return
     }
@@ -48,7 +54,8 @@ const Video = ({ videoId }: VideoProps) => {
 
     setRecord({
       isRecording: false,
-      text: 'start'
+      text: 'record',
+      icon: <RecordIcon />
     })
     setCount(120)
   }
@@ -58,14 +65,16 @@ const Video = ({ videoId }: VideoProps) => {
       pauseRecording()
       setRecording({
         isPause: true,
-        text: 'Resume'
+        text: 'Resume',
+        icon: <ResumeIcon />
       })
       return
     }
     resumeRecording()
     setRecording({
       isPause: false,
-      text: 'Pause'
+      text: 'Pause',
+      icon: <PauseIcon />
     })
   }
 
@@ -87,17 +96,18 @@ const Video = ({ videoId }: VideoProps) => {
     stopRecording()
     setRecord({
       isRecording: false,
-      text: 'start'
+      text: 'start',
+      icon: <StarIcon />
     })
 
     return () => clearInterval(timer)
   }, [count])
 
-  useEffect(()=>{
-    if(!videoId)
+  useEffect(() => {
+    if (!videoId)
       return
     const src = localStorage.getItem(videoId)
-    if(!src){
+    if (!src) {
       setSrcVideo(null)
       return
     }
@@ -107,7 +117,7 @@ const Video = ({ videoId }: VideoProps) => {
   useEffect(() => {
     if (!recordedBlob)
       return
-    const src =  window.URL.createObjectURL(recordedBlob)
+    const src = window.URL.createObjectURL(recordedBlob)
     setSrcVideo(src)
     if (!videoId)
       return
@@ -115,7 +125,7 @@ const Video = ({ videoId }: VideoProps) => {
   }, [recordedBlob])
 
   const _handlerReset = () => {
-    if(!videoId)
+    if (!videoId)
       return
     localStorage.removeItem(videoId)
     setSrcVideo(null)
@@ -126,19 +136,28 @@ const Video = ({ videoId }: VideoProps) => {
       <>
         <video src={srcVideo} playsInline autoPlay controls></video>
         <Box>
-          <Button onClick={() => downloadVideo(srcVideo)} leftIcon={<DownloadIcon />} />
-          <Button onClick={_handlerReset}>
-            Reset
+          <Button
+            onClick={() => downloadVideo(srcVideo)}
+            leftIcon={<DownloadIcon />}
+          >
+            Descargar
+          </Button>
+          <Button
+            onClick={_handlerReset}
+            leftIcon={<RepeatIcon />}
+          >
+            Regrabar
           </Button>
         </Box>
       </>
     )
   }
 
+
   return (
     <Stack margin='auto'>
-      <video ref={video} playsInline autoPlay></video>
-      <HStack justifyContent={'space-between'}>
+      <video ref={video} playsInline autoPlay muted></video>
+      <HStack justifyContent={'space-between'} >
         <HStack >
           <Center w={4} h={4} border={'solid'} borderColor={'red.500'} rounded={'full'}>
             <CircleIcon boxSize={redDot ? 3 : 4} color={'red.500'} />
@@ -146,10 +165,18 @@ const Video = ({ videoId }: VideoProps) => {
           <Text>{timeString}</Text>
         </HStack>
         <HStack>
-          <Button onClick={_handlerRecord}>{record.text}</Button>
-          <Button onClick={_handlerRecording}>{recording.text}</Button>
+          <IconButton
+            aria-label={record.text}
+            onClick={_handlerRecord}
+            icon={record.icon}
+          />
+          <IconButton
+            aria-label={recording.text}
+            onClick={_handlerRecording}
+            icon={recording.icon}
+          />
         </HStack>
-        <Button onClick={() => setVideoStream(video)}>Open Camera</Button>
+        <Button onClick={() => setVideoStream(video)}>Abrir Camara</Button>
       </HStack>
     </Stack>
   )
